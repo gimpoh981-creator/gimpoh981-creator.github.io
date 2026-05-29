@@ -149,102 +149,122 @@ function rainLabel(rain) {
   return "\ube44 \uc5c6\uc74c";
 }
 
-const outfitImageKeywords = {
+const outfitPreviewCopy = {
   hot: {
-    photos: [
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80"
-    ],
     caption: "\ub354\uc6b4 \ub0a0\uc5d0 \uc5b4\uc6b8\ub9ac\ub294 \ubc1d\uc740 \uc0c9\uac10\uacfc \ud1b5\uae30\uc131 \uc88b\uc740 \uc154\uce20 \uc870\ud569"
   },
   humid: {
-    photos: [
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80"
-    ],
     caption: "\uc2b5\ub3c4\uac00 \ub192\uc744 \ub54c \uc88b\uc740 \ud1b5\uae30\uc131 \uc911\uc2ec\uc758 \uac00\ubcbc\uc6b4 \uc2a4\ud0c0\uc77c"
   },
   rainy: {
-    photos: [
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80"
-    ],
     caption: "\ube44 \uc624\ub294 \ub0a0\uc5d0 \ud65c\uc6a9\ud558\uae30 \uc88b\uc740 \uc5b4\ub450\uc6b4 \uc0c9\uac10\uacfc \uc544\uc6b0\ud130 \uc870\ud569"
   },
   cold: {
-    photos: [
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1543076447-215ad9ba6923?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80"
-    ],
     caption: "\ucd94\uc6b4 \ub0a0\uc5d0 \uc5b4\uc6b8\ub9ac\ub294 \ub808\uc774\uc5b4\ub4dc\uc640 \ub450\uaed8\uac10 \uc788\ub294 \uc544\uc6b0\ud130"
   },
   mild: {
-    photos: [
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80"
-    ],
     caption: "\uc120\uc120\ud55c \ub0a0\uc528\uc5d0 \uc27d\uac8c \uc785\uae30 \uc88b\uc740 \uc154\uce20\uc640 \uc790\uc5f0\uc2a4\ub7ec\uc6b4 \uc544\uc6b0\ud130"
   }
 };
 
-const occasionImageKeywords = {
-  work: 0,
-  school: 1,
-  date: 2,
-  outing: 1,
-  exercise: 2,
-  formal: 0
+const occasionShapes = {
+  work: "jacket",
+  school: "shirt",
+  date: "knit",
+  outing: "shirt",
+  exercise: "active",
+  formal: "jacket"
 };
 
 function buildOutfitImage(data, result) {
-  const weatherSet = outfitImageKeywords[result.imageKey] || outfitImageKeywords.mild;
-  const occasionIndex = occasionImageKeywords[data.occasion] || 0;
-  const weatherIndex = Math.abs(Math.round(data.temperature) + Math.round(data.humidity / 10));
-  const photoIndex = (occasionIndex + weatherIndex) % weatherSet.photos.length;
-
-  return {
-    src: weatherSet.photos[photoIndex],
-    fallbackPhotos: weatherSet.photos.filter((_, index) => index !== photoIndex),
-    caption: `${weatherSet.caption} \u00b7 ${labels[data.occasion]}`
-  };
-}
-
-function buildFallbackImage(result) {
+  const preview = outfitPreviewCopy[result.imageKey] || outfitPreviewCopy.mild;
+  const shape = data.rain !== "no"
+    ? "rain"
+    : result.imageKey === "cold"
+      ? "coat"
+      : result.imageKey === "hot"
+        ? "summer"
+        : occasionShapes[data.occasion] || "shirt";
   const swatches = result.palette.swatches;
+  const top = swatches[0];
+  const accent = swatches[1];
+  const bottom = swatches[2];
+  const dark = "#202124";
+  const muted = "#646a73";
+  const title = labels[data.occasion];
+  const temp = `${data.temperature}\u00b0C`;
+  const rain = rainLabel(data.rain);
+  const garment = {
+    summer: `
+      <path d="M354 148 L454 118 L546 148 L620 250 L574 284 L536 206 L536 430 H364 L364 206 L326 284 L280 250 Z" fill="${top}"/>
+      <path d="M396 430 H446 L438 494 H370 Z" fill="${bottom}"/>
+      <path d="M454 430 H506 L530 494 H462 Z" fill="${bottom}"/>
+      <path d="M420 146 Q450 180 480 146 L502 158 Q450 224 398 158 Z" fill="${accent}"/>
+    `,
+    shirt: `
+      <path d="M332 138 H568 L646 300 L588 330 L542 224 V438 H358 V224 L312 330 L254 300 Z" fill="${top}"/>
+      <path d="M388 138 L450 212 L512 138 Z" fill="${accent}"/>
+      <rect x="382" y="438" width="58" height="78" rx="12" fill="${bottom}"/>
+      <rect x="460" y="438" width="58" height="78" rx="12" fill="${bottom}"/>
+    `,
+    knit: `
+      <path d="M338 160 Q450 110 562 160 L630 306 L574 336 L538 246 V438 H362 V246 L326 336 L270 306 Z" fill="${accent}"/>
+      <path d="M398 158 Q450 210 502 158 L520 178 Q450 250 380 178 Z" fill="${top}"/>
+      <rect x="378" y="438" width="64" height="76" rx="16" fill="${bottom}"/>
+      <rect x="458" y="438" width="64" height="76" rx="16" fill="${bottom}"/>
+    `,
+    jacket: `
+      <path d="M320 132 H580 L666 430 H512 L450 224 L388 430 H234 Z" fill="${accent}"/>
+      <path d="M386 148 H514 L548 430 H352 Z" fill="${top}"/>
+      <path d="M320 132 L388 430 H234 Z" fill="${dark}" opacity=".18"/>
+      <path d="M580 132 L512 430 H666 Z" fill="${dark}" opacity=".18"/>
+      <rect x="374" y="430" width="62" height="82" rx="12" fill="${bottom}"/>
+      <rect x="464" y="430" width="62" height="82" rx="12" fill="${bottom}"/>
+    `,
+    active: `
+      <path d="M350 150 L450 118 L550 150 L618 268 L566 302 L534 224 V392 H366 V224 L334 302 L282 268 Z" fill="${accent}"/>
+      <path d="M398 392 H444 L430 506 H348 Z" fill="${bottom}"/>
+      <path d="M456 392 H502 L552 506 H470 Z" fill="${bottom}"/>
+      <path d="M406 144 Q450 190 494 144 L510 158 Q450 224 390 158 Z" fill="${top}"/>
+    `,
+    rain: `
+      <path d="M310 148 H590 L674 438 H226 Z" fill="${accent}"/>
+      <path d="M376 148 Q450 86 524 148 L504 194 Q450 154 396 194 Z" fill="${top}"/>
+      <path d="M450 166 V438" stroke="${dark}" stroke-width="10" opacity=".28"/>
+      <rect x="358" y="438" width="70" height="76" rx="12" fill="${bottom}"/>
+      <rect x="472" y="438" width="70" height="76" rx="12" fill="${bottom}"/>
+    `,
+    coat: `
+      <path d="M310 126 H590 L646 502 H254 Z" fill="${accent}"/>
+      <path d="M384 126 H516 L550 502 H350 Z" fill="${top}"/>
+      <path d="M310 126 L350 502 H254 Z" fill="${dark}" opacity=".20"/>
+      <path d="M590 126 L550 502 H646 Z" fill="${dark}" opacity=".20"/>
+      <path d="M398 126 Q450 206 502 126 L526 150 Q450 250 374 150 Z" fill="${bottom}"/>
+    `
+  }[shape];
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
-      <rect width="900" height="560" fill="#f4f7f8"/>
-      <rect x="76" y="70" width="748" height="420" rx="28" fill="#ffffff"/>
-      <circle cx="242" cy="190" r="64" fill="${swatches[1]}"/>
-      <path d="M190 282 L294 282 L334 440 L150 440 Z" fill="${swatches[0]}"/>
-      <path d="M366 146 H632 L684 440 H314 Z" fill="${swatches[1]}"/>
-      <path d="M410 178 H588 L624 440 H374 Z" fill="${swatches[2]}"/>
-      <path d="M378 146 L322 250 L366 278 L426 166 Z" fill="#202124" opacity=".16"/>
-      <path d="M620 146 L678 250 L634 278 L574 166 Z" fill="#202124" opacity=".16"/>
-      <rect x="404" y="440" width="52" height="72" rx="12" fill="#202124" opacity=".72"/>
-      <rect x="544" y="440" width="52" height="72" rx="12" fill="#202124" opacity=".72"/>
-      <text x="450" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#646a73">Weather Fit Guide</text>
+      <rect width="900" height="560" fill="#eef3f4"/>
+      <rect x="60" y="52" width="780" height="456" rx="30" fill="#ffffff"/>
+      <circle cx="450" cy="96" r="40" fill="#d7bea2"/>
+      ${garment}
+      <circle cx="112" cy="108" r="20" fill="${top}" stroke="#d8dde5" stroke-width="2"/>
+      <circle cx="162" cy="108" r="20" fill="${accent}" stroke="#d8dde5" stroke-width="2"/>
+      <circle cx="212" cy="108" r="20" fill="${bottom}" stroke="#d8dde5" stroke-width="2"/>
+      <text x="112" y="462" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="${dark}">${title}</text>
+      <text x="112" y="498" font-family="Arial, sans-serif" font-size="20" fill="${muted}">${temp} | ${rain}</text>
+      <text x="788" y="498" text-anchor="end" font-family="Arial, sans-serif" font-size="20" fill="${muted}">Weather Fit Guide</text>
     </svg>
   `;
 
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  return {
+    src: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
+    caption: `${preview.caption} \u00b7 ${labels[data.occasion]}`
+  };
 }
 
-function showOutfitImage(image, result) {
-  const fallbacks = [...image.fallbackPhotos, buildFallbackImage(result)];
-
-  outfitImage.onerror = () => {
-    const next = fallbacks.shift();
-
-    if (!next) return;
-    outfitImage.src = next;
-  };
-
+function showOutfitImage(image) {
+  outfitImage.onerror = null;
   outfitImage.src = image.src;
   outfitImage.alt = image.caption;
   outfitCaption.textContent = image.caption;
@@ -283,7 +303,7 @@ form.addEventListener("submit", (event) => {
   const result = render();
   const image = buildOutfitImage(data, result);
 
-  showOutfitImage(image, result);
+  showOutfitImage(image);
 });
 
 form.addEventListener("input", render);
