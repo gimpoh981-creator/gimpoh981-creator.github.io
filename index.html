@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather Fit Guide</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="intro" aria-labelledby="app-title">
+        <div>
+          <p class="eyebrow">Weather based outfit guide</p>
+          <h1 id="app-title">&#50724;&#45720; &#45216;&#50472;&#50640; &#47582;&#45716; &#50743;&#52264;&#47548; &#52628;&#52380;</h1>
+          <p class="intro-copy">
+            &#44592;&#50728;, &#49845;&#46020;, &#48708; &#50668;&#48512;&#50752; &#50724;&#45720;&#51032; &#49345;&#54889;&#51012; &#51077;&#47141;&#54616;&#47732; &#50612;&#50872;&#47532;&#45716; &#49353;&#44048;, &#49548;&#51116;, &#50743; &#51333;&#47448;&#47484; &#48736;&#47476;&#44172; &#52628;&#52380;&#54633;&#45768;&#45796;.
+          </p>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="recommendation workspace">
+        <form class="input-panel" id="weather-form">
+          <div class="panel-heading">
+            <h2>&#45216;&#50472; &#51312;&#44148;</h2>
+            <p>&#54788;&#51116; &#50508;&#44256; &#51080;&#45716; &#44050;&#47564; &#44036;&#45800;&#55176; &#51077;&#47141;&#54616;&#49464;&#50836;.</p>
+          </div>
+
+          <label class="field">
+            <span>&#51648;&#50669;</span>
+            <input id="location" name="location" type="text" placeholder="Seoul, Busan, Jeju" value="Seoul">
+          </label>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>&#44592;&#50728;</span>
+              <div class="unit-input">
+                <input id="temperature" name="temperature" type="number" min="-20" max="45" value="24" required>
+                <span aria-hidden="true">&deg;C</span>
+              </div>
+            </label>
+
+            <label class="field">
+              <span>&#49845;&#46020;</span>
+              <div class="unit-input">
+                <input id="humidity" name="humidity" type="number" min="0" max="100" value="58" required>
+                <span aria-hidden="true">%</span>
+              </div>
+            </label>
+          </div>
+
+          <fieldset class="choice-group">
+            <legend>&#48708; &#50668;&#48512;</legend>
+            <label>
+              <input type="radio" name="rain" value="no" checked>
+              <span>&#48708; &#50630;&#51020;</span>
+            </label>
+            <label>
+              <input type="radio" name="rain" value="light">
+              <span>&#44032;&#48316;&#50868; &#48708;</span>
+            </label>
+            <label>
+              <input type="radio" name="rain" value="heavy">
+              <span>&#48708; &#47566;&#51060; &#50740;</span>
+            </label>
+          </fieldset>
+
+          <label class="field">
+            <span>&#50724;&#45720;&#51032; &#49345;&#54889;</span>
+            <select id="occasion" name="occasion">
+              <option value="work">&#52636;&#44540;</option>
+              <option value="school">&#46321;&#44368;</option>
+              <option value="date">&#45936;&#51060;&#53944;</option>
+              <option value="outing">&#44032;&#48316;&#50868; &#50808;&#52636;</option>
+              <option value="exercise">&#50868;&#46041;</option>
+              <option value="formal">&#44201;&#49885; &#51080;&#45716; &#51088;&#47532;</option>
+            </select>
+          </label>
+
+          <button class="primary-action" type="submit">&#52628;&#52380; &#48155;&#44592;</button>
+        </form>
+
+        <aside class="result-panel" aria-live="polite">
+          <div class="weather-summary">
+            <span id="summary-location">Seoul</span>
+            <strong id="summary-weather">24&deg;C | 58% | dry</strong>
+          </div>
+
+          <div class="result-section">
+            <p class="section-label">&#52628;&#52380; &#49353;&#44048;</p>
+            <div class="swatches" id="color-swatches"></div>
+            <p id="colors"></p>
+          </div>
+
+          <div class="result-grid">
+            <article>
+              <p class="section-label">&#52628;&#52380; &#49548;&#51116;</p>
+              <h3 id="materials"></h3>
+            </article>
+            <article>
+              <p class="section-label">&#50743; &#51333;&#47448;</p>
+              <h3 id="items"></h3>
+            </article>
+          </div>
+
+          <div class="result-section">
+            <p class="section-label">&#50724;&#45720;&#51032; &#53076;&#46356; &#48169;&#54693;</p>
+            <p class="outfit-note" id="outfit-note"></p>
+          </div>
+
+          <figure class="outfit-photo is-hidden" id="outfit-photo">
+            <img id="outfit-image" alt="">
+            <figcaption id="outfit-caption"></figcaption>
+          </figure>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
